@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, type FormEvent } from 'react';
 
-function GeminiChat() {
+function GeminiChat(): JSX.Element {
   const [prompt, setPrompt] = useState('');
   const [response, setResponse] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setResponse('');
@@ -28,12 +28,12 @@ function GeminiChat() {
         throw new Error(errorData.error || `HTTP error! status: ${res.status}`);
       }
 
-      const data = await res.json();
+      const data: { response: string } = await res.json();
       setResponse(data.response); // Get the 'response' property from your backend's JSON
 
-    } catch (err) {
+    } catch (err: any) {
       console.error("Error generating content:", err);
-      setError('Failed to get a response from Gemini: ${err.message}.');
+      setError(`Failed to get a response from Gemini: ${err.message}.`);
     } finally {
       setLoading(false);
     }
@@ -44,8 +44,8 @@ function GeminiChat() {
       <h1>Gemini AI Chat</h1>
       <form onSubmit={handleSubmit}>
         <textarea
-          rows="5"
-          cols="50"
+          rows={5}
+          cols={50}
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           placeholder="Ask Gemini something..."
